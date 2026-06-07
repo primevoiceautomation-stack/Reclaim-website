@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reclaim — Recover Your Money</title>
+<meta name="description" content="Reclaim automatically detects duplicate charges, unauthorized subscriptions, and billing errors — then helps you get your money back in one tap.">
+<meta property="og:title" content="Reclaim — Recover Your Money">
+<meta property="og:description" content="AI-powered billing error detection and recovery. Available on iOS.">
+<meta property="og:image" content="https://reclaim-legal.vercel.app/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #2aff94;
+  --green-dim: rgba(42,255,148,0.12);
+  --green-border: rgba(42,255,148,0.25);
+  --dark: #08090c;
+  --dark2: #0e1014;
+  --dark3: #13151a;
+  --text: #eef1f8;
+  --text-muted: #8494b0;
+  --text-dim: #4a5568;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,9,12,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.04)}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--green);text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:14px;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{background:var(--green);color:#000;font-size:13px;font-weight:600;padding:8px 20px;border-radius:100px;text-decoration:none;transition:opacity 0.2s}
+.nav-cta:hover{opacity:0.85}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(42,255,148,0.07) 0%, transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-dim);border:1px solid var(--green-border);border-radius:100px;padding:6px 14px;font-size:12px;font-weight:500;color:var(--green);margin-bottom:28px;animation:fadeUp 0.6s ease both}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(44px,7vw,88px);line-height:1.05;letter-spacing:-0.02em;margin-bottom:24px;animation:fadeUp 0.7s 0.1s ease both}
+h1 em{font-style:italic;color:var(--green)}
+.hero-sub{font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:520px;line-height:1.7;margin-bottom:40px;animation:fadeUp 0.7s 0.2s ease both}
+.hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;animation:fadeUp 0.7s 0.3s ease both}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#000;font-size:15px;font-weight:600;padding:14px 28px;border-radius:100px;text-decoration:none;transition:all 0.2s}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(42,255,148,0.25)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text-muted);font-size:15px;padding:14px 28px;border-radius:100px;text-decoration:none;border:1px solid rgba(255,255,255,0.1);transition:all 0.2s}
+.btn-secondary:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
+.hero-stats{display:flex;align-items:center;gap:40px;margin-top:64px;animation:fadeUp 0.7s 0.4s ease both}
+.stat{text-align:center}
+.stat-num{font-family:'DM Serif Display',serif;font-size:32px;color:var(--text)}
+.stat-label{font-size:12px;color:var(--text-muted);margin-top:2px}
+.stat-divider{width:1px;height:40px;background:rgba(255,255,255,0.08)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* PHONE MOCKUP */
+.phone-wrap{margin-top:80px;position:relative;display:flex;justify-content:center;animation:fadeUp 0.8s 0.5s ease both}
+.phone{width:260px;height:520px;background:var(--dark2);border-radius:40px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;position:relative;box-shadow:0 40px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.04)}
+.phone-notch{width:90px;height:28px;background:var(--dark);border-radius:0 0 16px 16px;margin:0 auto;position:relative;z-index:2}
+.phone-screen{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+.phone-header{display:flex;justify-content:space-between;align-items:center}
+.phone-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--green)}
+.phone-greeting{font-size:11px;color:var(--text-muted)}
+.phone-hero-card{background:rgba(42,255,148,0.08);border:1px solid var(--green-border);border-radius:14px;padding:14px}
+.phone-hero-label{font-size:9px;color:var(--text-muted);margin-bottom:4px}
+.phone-hero-amount{font-family:'DM Serif Display',serif;font-size:28px;color:var(--green)}
+.phone-hero-sub{font-size:9px;color:var(--text-muted);margin-top:2px}
+.phone-section-label{font-size:9px;color:var(--text-muted);font-weight:500;margin-top:4px}
+.issue-card{background:var(--dark3);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.issue-dot{width:3px;height:32px;border-radius:2px;flex-shrink:0}
+.issue-info{flex:1}
+.issue-type{font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em}
+.issue-name{font-size:11px;color:var(--text);font-weight:500;margin-top:1px}
+.issue-amount{font-size:11px;font-weight:600;color:var(--green);margin-left:auto}
+
+/* FEATURES */
+.section{padding:100px 24px;max-width:1100px;margin:0 auto}
+.section-label{font-size:12px;font-weight:500;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-family:'DM Serif Display',serif;font-size:clamp(32px,4vw,52px);line-height:1.1;margin-bottom:16px}
+.section-sub{font-size:16px;color:var(--text-muted);max-width:500px;line-height:1.7;margin-bottom:56px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feature-card{background:var(--dark2);border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:28px;transition:border-color 0.2s}
+.feature-card:hover{border-color:var(--green-border)}
+.feature-icon{width:40px;height:40px;border-radius:10px;background:var(--green-dim);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px}
+.feature-title{font-size:15px;font-weight:600;margin-bottom:8px}
+.feature-desc{font-size:13px;color:var(--text-muted);line-height:1.6}
+
+/* HOW IT WORKS */
+.how-section{background:var(--dark2);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);padding:100px 24px}
+.how-inner{max-width:1100px;margin:0 auto}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:56px}
+.step{position:relative}
+.step-num{font-family:'DM Serif Display',serif;font-size:48px;color:var(--green-dim);margin-bottom:12px;line-height:1}
+.step-title{font-size:15px;font-weight:600;margin-bottom:8px}
+.step-desc{font-size:13px;color:var(--text-muted);line-height:1.6}
+.step-line{position:absolute;top:28px;left:60px;right:-24px;height:1px;background:linear-gradient(to right,var(--green-border),transparent);display:none}
+
+/* PLANS */
+.plans-section{padding:100px 24px;max-width:1100px;margin:0 auto}
+.plans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
+.plan-card{background:var(--dark2);border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:28px;position:relative}
+.plan-card.featured{border-color:var(--green-border);background:rgba(42,255,148,0.04)}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;font-size:11px;font-weight:700;padding:3px 12px;border-radius:100px;white-space:nowrap}
+.plan-name{font-size:13px;font-weight:500;color:var(--text-muted);margin-bottom:8px}
+.plan-price{font-family:'DM Serif Display',serif;font-size:32px;color:var(--text);margin-bottom:4px}
+.plan-price span{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text-muted)}
+.plan-desc{font-size:12px;color:var(--text-muted);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.plan-features{display:flex;flex-direction:column;gap:8px}
+.plan-feature{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-muted)}
+.plan-check{color:var(--green);flex-shrink:0;margin-top:1px}
+
+/* TRUST */
+.trust-section{background:var(--dark2);border-top:1px solid rgba(255,255,255,0.04);padding:80px 24px}
+.trust-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.trust-item{text-align:center}
+.trust-icon{font-size:32px;margin-bottom:16px}
+.trust-title{font-size:15px;font-weight:600;margin-bottom:8px}
+.trust-desc{font-size:13px;color:var(--text-muted);line-height:1.6}
+
+/* CTA */
+.cta-section{padding:120px 24px;text-align:center}
+.cta-inner{max-width:600px;margin:0 auto}
+.cta-section h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,64px);line-height:1.1;margin-bottom:20px}
+.cta-section p{font-size:16px;color:var(--text-muted);margin-bottom:40px;line-height:1.7}
+.app-store-btn{display:inline-flex;align-items:center;gap:12px;background:var(--text);color:#000;padding:14px 28px;border-radius:14px;text-decoration:none;transition:all 0.2s}
+.app-store-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(238,241,248,0.15)}
+.app-store-icon{font-size:24px}
+.app-store-text{text-align:left}
+.app-store-sub{font-size:10px;opacity:0.6;font-weight:400}
+.app-store-name{font-size:16px;font-weight:700}
+
+/* FOOTER */
+footer{border-top:1px solid rgba(255,255,255,0.06);padding:48px 24px}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.footer-logo{font-family:'DM Serif Display',serif;font-size:20px;color:var(--green)}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+.footer-copy{font-size:12px;color:var(--text-dim)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:16px 20px}
+  .nav-links{display:none}
+  .features-grid,.steps,.plans-grid,.trust-inner{grid-template-columns:1fr}
+  .hero-stats{gap:24px}
+  .stat-divider{display:none}
+  .footer-inner{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">Reclaim</a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#plans">Plans</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/support.html">Support</a>
+  </div>
+  <a class="nav-cta" href="#download">Download</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    Now available on iOS
+  </div>
+  <h1>Stop losing money<br>to <em>billing errors</em></h1>
+  <p class="hero-sub">Reclaim automatically detects duplicate charges, unauthorized subscriptions, and overcharges — then writes the recovery email for you.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#download">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Download on App Store
+    </a>
+    <a class="btn-secondary" href="#how">See how it works →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">$340</div>
+      <div class="stat-label">avg. recovered per user</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-num">60s</div>
+      <div class="stat-label">to detect first issue</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-num">21</div>
+      <div class="stat-label">countries supported</div>
+    </div>
+  </div>
+
+  <!-- Phone mockup -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="phone-header">
+          <div>
+            <div class="phone-title">Reclaim</div>
+            <div class="phone-greeting">Good morning, Ken</div>
+          </div>
+          <div style="font-size:18px">🔔</div>
+        </div>
+        <div class="phone-hero-card">
+          <div class="phone-hero-label">RECOVERED THIS MONTH</div>
+          <div class="phone-hero-amount">$340</div>
+          <div class="phone-hero-sub">from 4 merchants · 3 active issues</div>
+        </div>
+        <div class="phone-section-label">ACTIVE ISSUES</div>
+        <div class="issue-card">
+          <div class="issue-dot" style="background:#ff3d55"></div>
+          <div class="issue-info">
+            <div class="issue-type">Duplicate charge</div>
+            <div class="issue-name">Netflix</div>
+          </div>
+          <div class="issue-amount">$15.99</div>
+        </div>
+        <div class="issue-card">
+          <div class="issue-dot" style="background:#ff9f1c"></div>
+          <div class="issue-info">
+            <div class="issue-type">Price increase</div>
+            <div class="issue-name">Spotify</div>
+          </div>
+          <div class="issue-amount">+$4.00</div>
+        </div>
+        <div class="issue-card">
+          <div class="issue-dot" style="background:#a855f7"></div>
+          <div class="issue-info">
+            <div class="issue-type">Unknown charge</div>
+            <div class="issue-name">Adobe Inc.</div>
+          </div>
+          <div class="issue-amount">$89.00</div>
+        </div>
+      </div>
+    </div>
+    <!-- glow -->
+    <div style="position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);width:200px;height:80px;background:rgba(42,255,148,0.15);filter:blur(40px);border-radius:50%;pointer-events:none"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Everything you need<br>to fight back</h2>
+  <p class="section-sub">Reclaim combines AI detection, smart email generation, and professional tax help in one app.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-title">AI Issue Detection</div>
+      <div class="feature-desc">Paste a bank statement or connect your account. Reclaim identifies duplicate charges, price hikes, and unauthorized subscriptions in seconds.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✉️</div>
+      <div class="feature-title">Recovery Emails</div>
+      <div class="feature-desc">AI writes a professional recovery email in your name with the exact amount. Choose your tone — polite, firm, or legal.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <div class="feature-title">Auto Follow-ups</div>
+      <div class="feature-desc">No reply? Reclaim automatically sends follow-up emails until the merchant responds. Set it and forget it.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Budget Tracker</div>
+      <div class="feature-desc">Track spending with a financial health score (A+ to F), savings goals, AI insights, and 6-month trends. Better than YNAB.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏦</div>
+      <div class="feature-title">Bank Auto-sync</div>
+      <div class="feature-desc">Connect your bank via Plaid (US/Canada) or TrueLayer (UK/EU) and Reclaim monitors every transaction as it happens.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧾</div>
+      <div class="feature-title">Tax Professionals</div>
+      <div class="feature-desc">Book a real CPA directly from the app. Filing from $149. Debt relief, quarterly planning, IRS representation and more.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="how-section" id="how">
+  <div class="how-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">From scan to recovery<br>in under 2 minutes</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Scan your statement</div>
+        <div class="step-desc">Paste text, take a photo, or connect your bank. Reclaim reads your transactions instantly.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Issues detected</div>
+        <div class="step-desc">AI identifies every duplicate charge, price increase, and suspicious transaction automatically.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Email generated</div>
+        <div class="step-desc">Reclaim writes your recovery email. Review it, choose your tone, and send in one tap.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Money recovered</div>
+        <div class="step-desc">Merchants respond, refunds are issued. Reclaim tracks every outcome and follows up automatically.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLANS -->
+<section class="plans-section" id="plans">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">Plans that pay<br>for themselves</h2>
+  <p class="section-sub">Most users recover the cost of their subscription in their first week.</p>
+  <div class="plans-grid">
+    <div class="plan-card">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">$0</div>
+      <div class="plan-desc">Get started, see what you're missing</div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="plan-check">✓</span> 3 recovery emails</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Unlimited scans</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Issue detection</div>
+      </div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Recover</div>
+      <div class="plan-price">$9.99<span>/mo</span></div>
+      <div class="plan-desc">Unlimited recovery for individuals</div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="plan-check">✓</span> Unlimited emails</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Auto follow-ups</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Budget tracker</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Health score</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Savings goals</div>
+      </div>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-badge">Most popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$14.99<span>/mo</span></div>
+      <div class="plan-desc">Automatic recovery with bank sync</div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="plan-check">✓</span> Everything in Recover</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Bank auto-sync</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Gmail scanning</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Income tracking</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Priority AI</div>
+      </div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Family</div>
+      <div class="plan-price">$22.99<span>/mo</span></div>
+      <div class="plan-desc">Pro for up to 5 people · $4.60/person</div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="plan-check">✓</span> 5 member accounts</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Shared dashboard</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> Family health score</div>
+        <div class="plan-feature"><span class="plan-check">✓</span> All Pro features</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust-section">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <div class="trust-icon">🔒</div>
+      <div class="trust-title">Bank-grade security</div>
+      <div class="trust-desc">Read-only bank access. Sessions encrypted with iOS Keychain. We never see your login credentials or store card details.</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🌍</div>
+      <div class="trust-title">21 countries</div>
+      <div class="trust-desc">Available in the US, Canada, UK, EU, Middle East, Asia-Pacific, and Brazil. GDPR, CCPA, and PIPEDA compliant.</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🤝</div>
+      <div class="trust-title">Real professionals</div>
+      <div class="trust-desc">Tax services provided by licensed CPAs, not bots. Book, communicate, and file — all inside the app.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section" id="download">
+  <div class="cta-inner">
+    <h2>Start recovering<br><em style="font-style:italic;color:var(--green)">your money</em> today</h2>
+    <p>Join thousands of people who've stopped letting billing errors go unchallenged. Free to start — no card required.</p>
+    <a class="app-store-btn" href="#">
+      <div class="app-store-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      </div>
+      <div class="app-store-text">
+        <div class="app-store-sub">Download on the</div>
+        <div class="app-store-name">App Store</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Reclaim</div>
+    <div class="footer-links">
+      <a href="#features">Features</a>
+      <a href="#plans">Pricing</a>
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/support.html">Support</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 Reclaim. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>
