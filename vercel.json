@@ -2,9 +2,7 @@
   "rewrites": [
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/support", "destination": "/support.html" },
-    { "source": "/tax-pro-portal", "destination": "https://reclaim-tax-pro-portal.vercel.app/" },
-    { "source": "/tax-pro-portal/:path*", "destination": "https://reclaim-tax-pro-portal.vercel.app/:path*" }
+    { "source": "/support", "destination": "/support.html" }
   ],
   "headers": [
     {

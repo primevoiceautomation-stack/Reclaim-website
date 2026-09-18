@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Talby Tax Pro Portal</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@300;400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0b0d; --surface:#131519; --card:#181a1f;
+  --border:rgba(238,241,239,0.08); --border2:rgba(238,241,239,0.14);
+  --green:#2aff94; --blue:#4d8fff; --warn:#c9a961; --red:#ff5c5c; --purple:#a78bfa; --teal:#06b6d4;
+  --text:#eef1ef; --muted:#4c525c; --muted2:#7d8590;
+  --mono:'Space Mono',monospace; --sans:'Work Sans',sans-serif; --serif:'Fraunces',Georgia,serif;
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-full:999px;
+  --sidebar-w:240px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.5;overflow-x:hidden}
+
+/* ── LOGIN ─────────────────────────────────────────────────────────────── */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse 60% 40% at 20% 10%,rgba(42,255,148,0.06),transparent 60%),var(--bg)}
+.login-box{width:100%;max-width:420px;padding:36px 28px;background:var(--surface);border:1px solid var(--border2);border-radius:20px;position:relative;overflow:hidden}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent)}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.logo-shield{width:38px;height:38px;background:linear-gradient(135deg,rgba(42,255,148,0.15),rgba(42,255,148,0.05));border:1px solid rgba(42,255,148,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-text{font-family:var(--serif);font-size:20px;color:var(--text)}
+.logo-badge{font-family:var(--mono);font-size:9px;color:var(--green);background:rgba(42,255,148,0.1);border:1px solid rgba(42,255,148,0.2);border-radius:4px;padding:2px 7px;letter-spacing:.5px}
+.login-title{font-family:var(--serif);font-size:24px;margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--muted2);margin-bottom:28px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:.6px;font-family:var(--mono);margin-bottom:6px}
+.field input{width:100%;background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:13px 14px;font-size:16px;font-family:var(--sans);color:var(--text);outline:none;transition:border-color .2s;-webkit-appearance:none}
+.field input:focus{border-color:var(--green)}
+.field input::placeholder{color:var(--muted)}
+.login-btn{width:100%;background:var(--green);color:#08090c;border:none;border-radius:12px;padding:15px;font-size:15px;font-family:var(--sans);font-weight:600;cursor:pointer;transition:opacity .2s;margin-top:4px;-webkit-appearance:none}
+.login-btn:active{opacity:.85}
+.login-btn:disabled{opacity:.5}
+.error-msg{background:rgba(255,61,85,0.1);border:1px solid rgba(255,61,85,0.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red);margin-bottom:14px;display:none}
+.login-legal{font-size:10px;color:var(--muted);text-align:center;margin-top:18px;line-height:1.6}
+
+/* ── APP LAYOUT ────────────────────────────────────────────────────────── */
+#app{display:none;height:100vh;overflow:hidden}
+
+/* Desktop: sidebar + main */
+@media(min-width:768px){
+  #app{display:none;flex-direction:row}
+  #app.open{display:flex}
+  .sidebar{position:relative;width:var(--sidebar-w);flex-shrink:0;height:100vh;overflow-y:auto}
+  .main{flex:1;overflow-y:auto;height:100vh}
+  .mobile-topbar{display:none}
+  .mobile-nav-overlay{display:none!important}
+  .mobile-nav-drawer{display:none!important}
+  .hamburger{display:none}
+}
+
+/* Mobile: full-screen with top bar + bottom nav */
+@media(max-width:767px){
+  #app{display:none;flex-direction:column}
+  #app.open{display:flex}
+  .sidebar{display:none!important}
+  .main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .mobile-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;flex-shrink:0}
+  .mobile-topbar-logo{display:flex;align-items:center;gap:8px}
+  .mobile-topbar-logo .logo-shield{width:30px;height:30px;font-size:14px;border-radius:8px}
+  .mobile-topbar-logo span{font-family:var(--serif);font-size:16px}
+  .hamburger{background:var(--card);border:1px solid var(--border2);border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text)}
+  .mobile-nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;backdrop-filter:blur(4px)}
+  .mobile-nav-overlay.open{display:block}
+  .mobile-nav-drawer{position:fixed;left:0;top:0;bottom:0;width:80%;max-width:300px;background:var(--surface);z-index:201;transform:translateX(-100%);transition:transform .25s ease;display:flex;flex-direction:column;overflow-y:auto}
+  .mobile-nav-drawer.open{transform:translateX(0)}
+  .page-header{padding:20px 16px 0}
+  .page-title{font-size:22px}
+  .content{padding:0 16px 80px}
+  .stats-row{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat-card{padding:14px}
+  .stat-value{font-size:24px}
+  .case-card{padding:14px 16px;grid-template-columns:1fr}
+  .case-card-right{display:flex;align-items:center;gap:8px;margin-top:10px}
+  .info-grid{grid-template-columns:1fr}
+  .case-modal{width:100%;max-height:90vh;border-radius:20px 20px 0 0}
+  .modal-overlay{align-items:flex-end;padding:0}
+  .form-row{flex-direction:column}
+  .catalog-grid{grid-template-columns:1fr}
+  .revenue-banner{flex-wrap:wrap;gap:12px}
+}
+
+/* ── SIDEBAR ────────────────────────────────────────────────────────────── */
+.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.sidebar-logo{padding:22px 18px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-logo .logo-text{font-family:var(--serif);font-size:17px}
+.nav-section{padding:18px 10px 0;flex:1}
+.nav-label{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:0 8px;margin-bottom:6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--muted2);transition:all .15s;margin-bottom:2px;border:1px solid transparent;user-select:none}
+.nav-item:hover,.nav-item:active{background:var(--card);color:var(--text)}
+.nav-item.active{background:rgba(42,255,148,0.08);color:var(--green);border-color:rgba(42,255,148,0.15)}
+.nav-icon{font-size:16px;width:20px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--red);color:white;font-size:9px;font-family:var(--mono);border-radius:10px;padding:1px 6px;font-weight:600}
+.sidebar-footer{padding:14px 10px;border-top:1px solid var(--border)}
+.pro-card{background:var(--card);border-radius:10px;padding:12px;border:1px solid var(--border2)}
+.pro-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.pro-email{font-size:10px;color:var(--muted2);font-family:var(--mono);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pro-actions{display:flex;gap:6px}
+.sign-out-btn,.pw-btn{flex:1;background:transparent;border:1px solid var(--border2);border-radius:7px;padding:8px 4px;font-size:11px;color:var(--muted2);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.sign-out-btn:hover{border-color:var(--red);color:var(--red)}
+.pw-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ── MAIN ────────────────────────────────────────────────────────────────── */
+.main{background:var(--bg)}
+.page-header{padding:28px 32px 0;margin-bottom:24px}
+.page-title{font-family:var(--serif);font-size:26px;color:var(--text);margin-bottom:3px}
+.page-sub{font-size:13px;color:var(--muted2)}
+.content{padding:0 32px 48px}
+@media(max-width:767px){
+  .content{padding:0 16px 80px}
+  .page-header{padding:20px 16px 0;margin-bottom:18px}
+}
+.section{display:none}
+.section.active{display:block}
+
+/* ── STATS ───────────────────────────────────────────────────────────────── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.stat-card.green::before{background:linear-gradient(90deg,var(--green),transparent)}
+.stat-card.blue::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.stat-card.warn::before{background:linear-gradient(90deg,var(--warn),transparent)}
+.stat-card.purple::before{background:linear-gradient(90deg,var(--purple),transparent)}
+.stat-label{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.stat-value{font-family:var(--serif);font-size:28px;line-height:1;margin-bottom:3px}
+.stat-value.green{color:var(--green)}.stat-value.blue{color:var(--blue)}.stat-value.warn{color:var(--warn)}.stat-value.purple{color:var(--purple)}
+.stat-sub{font-size:10px;color:var(--muted2)}
+@media(max-width:767px){.stats-row{grid-template-columns:repeat(2,1fr);gap:10px}.stat-value{font-size:22px}}
+
+/* ── FILTER BAR ──────────────────────────────────────────────────────────── */
+.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.filter-chip{padding:7px 14px;border-radius:var(--r-full);border:1px solid var(--border2);background:var(--surface);font-size:11px;color:var(--muted2);cursor:pointer;font-family:var(--mono);transition:all .15s;white-space:nowrap;user-select:none}
+.filter-chip:active,.filter-chip.active{background:rgba(42,255,148,0.08);border-color:rgba(42,255,148,0.3);color:var(--green)}
+.search-input{flex:1;min-width:150px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-md);padding:9px 14px;font-size:14px;color:var(--text);outline:none;font-family:var(--sans);transition:border-color .2s;-webkit-appearance:none}
+.search-input:focus{border-color:var(--green)}
+.search-input::placeholder{color:var(--muted)}
+
+/* ── CASE CARDS ──────────────────────────────────────────────────────────── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:14px;font-weight:600;color:var(--text)}
+.section-count{font-family:var(--mono);font-size:10px;color:var(--muted2);background:var(--card);border-radius:20px;padding:3px 10px;border:1px solid var(--border2)}
+.case-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:8px;cursor:pointer;transition:all .15s;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;-webkit-tap-highlight-color:transparent}
+.case-card:active{background:var(--card);transform:scale(0.99)}
+.case-card.urgent{border-left:3px solid var(--red)}
+.case-client{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.case-meta{font-size:12px;color:var(--muted2);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.case-year{font-family:var(--mono);font-size:11px;color:var(--blue)}
+.case-type-tag{font-family:var(--mono);font-size:9px;background:var(--card);border:1px solid var(--border2);border-radius:4px;padding:2px 6px;color:var(--muted2)}
+.urgent-badge{font-family:var(--mono);font-size:9px;color:var(--red);background:rgba(255,61,85,0.1);border:1px solid rgba(255,61,85,0.2);border-radius:4px;padding:2px 6px}
+.status-pill{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.3px;padding:4px 10px;border-radius:20px;border-width:1px;border-style:solid;white-space:nowrap}
+.pill-pending{color:var(--warn);background:rgba(255,159,28,0.1);border-color:rgba(255,159,28,0.25)}
+.pill-assigned{color:var(--blue);background:rgba(77,143,255,0.1);border-color:rgba(77,143,255,0.25)}
+.pill-in_progress{color:var(--purple);background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.25)}
+.pill-review{color:var(--teal);background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.25)}
+.pill-filed,.pill-completed{color:var(--green);background:rgba(42,255,148,0.1);border-color:rgba(42,255,148,0.25)}
+.accept-btn{background:var(--green);color:#08090c;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-family:var(--sans);font-weight:600;cursor:pointer;white-space:nowrap;-webkit-appearance:none}
+.accept-btn:active{opacity:.85}
+
+/* ── MODAL ───────────────────────────────────────────────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+@media(max-width:767px){.modal-overlay{align-items:flex-end;padding:0}}
+.case-modal{width:100%;max-width:580px;max-height:90vh;background:var(--surface);border:1px solid var(--border2);border-radius:20px;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:slideUp .25s ease}
+@media(max-width:767px){.case-modal{border-radius:20px 20px 0 0;max-height:92vh}}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{padding:20px 20px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);display:flex;justify-content:space-between;align-items:flex-start;z-index:10}
+.modal-drag-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px;display:none}
+@media(max-width:767px){.modal-drag-handle{display:block}}
+.modal-close{background:var(--card);border:1px solid var(--border2);color:var(--muted2);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-appearance:none}
+.modal-body{padding:20px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+@media(max-width:767px){.info-grid{grid-template-columns:1fr}}
+.info-item label{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:3px}
+.info-item value{font-size:13px;color:var(--text);font-weight:500;display:block}
+.divider-label{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.divider-label::before,.divider-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.doc-item{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;font-size:12px}
+.doc-name{color:var(--text);font-weight:500;flex:1}
+.doc-type{font-family:var(--mono);font-size:9px;color:var(--muted2);background:var(--surface);padding:2px 6px;border-radius:4px;border:1px solid var(--border)}
+.income-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:12px}
+.income-table th{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:7px 8px;border-bottom:1px solid var(--border);text-align:left}
+.income-table td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--muted2)}
+.income-amount{color:var(--green);font-family:var(--mono);font-weight:500}
+.intake-block{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:18px}
+.intake-q{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.intake-a{font-size:12px;color:var(--text);line-height:1.6}
+.update-form{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border);margin-bottom:18px}
+.update-form h4{font-size:12px;font-weight:600;color:var(--text);margin-bottom:12px}
+.form-group{margin-bottom:12px}
+.form-group label{font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px}
+.form-group select,.form-group input,.form-group textarea{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:14px;font-family:var(--sans);color:var(--text);outline:none;transition:border-color .2s;-webkit-appearance:none}
+.form-group select:focus,.form-group input:focus,.form-group textarea:focus{border-color:var(--green)}
+.form-group select option{background:var(--card)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-row{display:flex;gap:10px}
+@media(max-width:767px){.form-row{flex-direction:column}}
+.form-row .form-group{flex:1}
+.update-btn{background:var(--green);color:#08090c;border:none;border-radius:8px;padding:11px 18px;font-size:13px;font-family:var(--sans);font-weight:600;cursor:pointer;-webkit-appearance:none}
+.update-btn:active{opacity:.85}
+.btn-secondary{background:transparent;border:1px solid var(--border2);border-radius:8px;padding:11px 14px;font-size:13px;font-family:var(--sans);color:var(--muted2);cursor:pointer;margin-left:8px;-webkit-appearance:none}
+.message-thread{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;max-height:200px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.message{margin-bottom:10px;display:flex;flex-direction:column}
+.message.from-pro{align-items:flex-end}
+.message-bubble{font-size:12px;padding:8px 12px;border-radius:10px;max-width:85%;line-height:1.5}
+.message.from-client .message-bubble{background:var(--surface);border:1px solid var(--border);color:var(--muted2);border-radius:10px 10px 10px 2px}
+.message.from-pro .message-bubble{background:rgba(42,255,148,0.1);border:1px solid rgba(42,255,148,0.2);color:var(--text);border-radius:10px 10px 2px 10px}
+.message-meta{font-size:10px;color:var(--muted);margin-top:3px;font-family:var(--mono)}
+.msg-input-row{display:flex;gap:8px}
+.msg-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:14px;font-family:var(--sans);color:var(--text);outline:none;transition:border-color .2s;-webkit-appearance:none}
+.msg-input:focus{border-color:var(--green)}
+.msg-input::placeholder{color:var(--muted)}
+.msg-send{background:var(--green);color:#08090c;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-family:var(--sans);font-weight:600;cursor:pointer;white-space:nowrap;-webkit-appearance:none}
+
+/* ── CATALOG ─────────────────────────────────────────────────────────────── */
+.catalog-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(max-width:767px){.catalog-grid{grid-template-columns:1fr}}
+.catalog-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;border-left:3px solid var(--green)}
+.catalog-card.tax_planning{border-left-color:var(--blue)}.catalog-card.debt_relief{border-left-color:var(--red)}.catalog-card.recovery{border-left-color:var(--warn)}.catalog-card.business{border-left-color:var(--teal)}.catalog-card.wealth{border-left-color:var(--purple)}
+.catalog-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.catalog-price{font-family:var(--mono);font-size:12px;color:var(--green);font-weight:600}
+.catalog-cat{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:3px}
+
+/* ── REVENUE BANNER ──────────────────────────────────────────────────────── */
+.revenue-banner{background:rgba(42,255,148,0.04);border:1px solid rgba(42,255,148,0.1);border-radius:12px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.revenue-item{text-align:center;flex:1;min-width:80px}
+.revenue-val{font-family:var(--serif);font-size:20px;color:var(--green);line-height:1}
+.revenue-lbl{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+
+/* ── MOBILE BOTTOM NAV ───────────────────────────────────────────────────── */
+.mobile-bottom-nav{display:none}
+@media(max-width:767px){
+  .mobile-bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:100;padding:8px 0 max(8px, env(safe-area-inset-bottom))}
+  .bottom-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;transition:color .15s;color:var(--muted2);font-size:9px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.3px;-webkit-tap-highlight-color:transparent}
+  .bottom-nav-item.active{color:var(--green)}
+  .bottom-nav-item .bnav-icon{font-size:20px}
+  .bottom-nav-badge{position:relative;display:inline-block}
+  .bottom-nav-badge::after{content:attr(data-count);position:absolute;top:-4px;right:-8px;background:var(--red);color:white;font-size:8px;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;display:none}
+  .bottom-nav-badge[data-count]:not([data-count=""])::after{display:flex}
+}
+
+/* ── EMPTY / LOADING ─────────────────────────────────────────────────────── */
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted2)}
+.empty-icon{font-size:36px;margin-bottom:14px}
+.empty-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
+.empty-sub{font-size:13px;line-height:1.6}
+.spinner{width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:36px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-center{text-align:center;padding:36px}
+.loading-text{font-size:12px;color:var(--muted2);margin-top:10px;font-family:var(--mono)}
+
+/* ── TOAST ───────────────────────────────────────────────────────────────── */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:12px 18px;font-size:13px;color:var(--text);z-index:9999;opacity:0;transition:all .3s;max-width:320px;width:90%;display:flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,0.4);text-align:center;justify-content:center}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+#toast.success{border-color:rgba(42,255,148,0.3)}
+#toast.error{border-color:rgba(255,61,85,0.3)}
+@media(min-width:768px){#toast{bottom:28px;left:auto;right:28px;transform:translateY(80px);width:auto}}
+@media(min-width:768px){#toast.show{transform:translateY(0)}}
+
+.legal-footer{margin-top:24px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font-size:11px;color:var(--muted);line-height:1.7}
+.legal-footer strong{color:var(--muted2)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-shield">🛡</div>
+      <span class="logo-text">Talby</span>
+      <span class="logo-badge">PRO PORTAL</span>
+    </div>
+    <div class="login-title">Welcome back</div>
+    <div class="login-sub">Tax professional dashboard</div>
+    <div class="error-msg" id="login-error"></div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" inputmode="email">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="Your password" autocomplete="current-password">
+    </div>
+    <button class="login-btn" id="login-btn" onclick="handleLogin()">Sign In</button>
+    <div class="login-legal">Authorized tax professionals only. Unauthorized access is prohibited.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- Mobile top bar -->
+  <div class="mobile-topbar">
+    <div class="mobile-topbar-logo">
+      <div class="logo-shield">🛡</div>
+      <span style="font-family:var(--serif);font-size:17px">Talby</span>
+    </div>
+    <button class="hamburger" onclick="toggleMobileNav()">☰</button>
+  </div>
+
+  <!-- Mobile nav drawer overlay -->
+  <div class="mobile-nav-overlay" id="nav-overlay" onclick="closeMobileNav()"></div>
+
+  <!-- Mobile nav drawer (same as sidebar) -->
+  <div class="mobile-nav-drawer" id="mobile-drawer">
+    <div style="padding:20px 16px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+      <div class="logo-shield">🛡</div>
+      <span style="font-family:var(--serif);font-size:17px">Talby</span>
+      <button onclick="closeMobileNav()" style="margin-left:auto;background:var(--card);border:1px solid var(--border2);color:var(--muted2);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Cases</div>
+      <div class="nav-item" onclick="showSection('queue');closeMobileNav()" id="mnav-queue"><span class="nav-icon">📋</span>Case Queue<span class="nav-badge" id="m-queue-badge" style="display:none"></span></div>
+      <div class="nav-item" onclick="showSection('my-cases');closeMobileNav()" id="mnav-my-cases"><span class="nav-icon">💼</span>My Cases</div>
+      <div class="nav-item" onclick="showSection('completed');closeMobileNav()" id="mnav-completed"><span class="nav-icon">✅</span>Completed</div>
+      <div class="nav-label" style="margin-top:14px">Resources</div>
+      <div class="nav-item" onclick="showSection('catalog');closeMobileNav()" id="mnav-catalog"><span class="nav-icon">📖</span>Service Catalog</div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="pro-card">
+        <div class="pro-name" id="m-pro-name">Loading...</div>
+        <div class="pro-email" id="m-pro-email"></div>
+        <div class="pro-actions">
+          <button class="pw-btn" onclick="showChangePassword()">🔑 Password</button>
+          <button class="sign-out-btn" onclick="handleSignOut()">Sign out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-shield" style="width:32px;height:32px;font-size:15px;border-radius:9px">🛡</div>
+      <span class="logo-text">Talby</span>
+    </div>
+    <nav class="nav-section">
+      <div class="nav-label">Cases</div>
+      <div class="nav-item active" onclick="showSection('queue')" id="nav-queue"><span class="nav-icon">📋</span>Case Queue<span class="nav-badge" id="queue-badge" style="display:none"></span></div>
+      <div class="nav-item" onclick="showSection('my-cases')" id="nav-my-cases"><span class="nav-icon">💼</span>My Cases</div>
+      <div class="nav-item" onclick="showSection('completed')" id="nav-completed"><span class="nav-icon">✅</span>Completed</div>
+      <div class="nav-label" style="margin-top:14px">Resources</div>
+      <div class="nav-item" onclick="showSection('catalog')" id="nav-catalog"><span class="nav-icon">📖</span>Service Catalog</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="pro-card">
+        <div class="pro-name" id="pro-name-display">Loading...</div>
+        <div class="pro-email" id="pro-email-display"></div>
+        <div class="pro-actions">
+          <button class="pw-btn" onclick="showChangePassword()">🔑 Password</button>
+          <button class="sign-out-btn" onclick="handleSignOut()">Sign out</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+    <!-- Queue -->
+    <div class="section active" id="section-queue">
+      <div class="page-header"><div class="page-title">Case Queue</div><div class="page-sub">New cases waiting for assignment</div></div>
+      <div class="content">
+        <div class="stats-row">
+          <div class="stat-card green"><div class="stat-label">New Cases</div><div class="stat-value green" id="stat-new">-</div><div class="stat-sub">Awaiting</div></div>
+          <div class="stat-card blue"><div class="stat-label">My Active</div><div class="stat-value blue" id="stat-active">-</div><div class="stat-sub">In progress</div></div>
+          <div class="stat-card warn"><div class="stat-label">Filed</div><div class="stat-value warn" id="stat-filed">-</div><div class="stat-sub">All time</div></div>
+          <div class="stat-card purple"><div class="stat-label">Rating</div><div class="stat-value purple" id="stat-rating">-</div><div class="stat-sub">Out of 5.0</div></div>
+        </div>
+        <div class="filter-bar">
+          <input class="search-input" id="queue-search" placeholder="Search cases…" oninput="filterQueue()">
+          <span class="filter-chip active" onclick="setQueueFilter('all',this)">All</span>
+          <span class="filter-chip" onclick="setQueueFilter('pending',this)">Pending</span>
+          <span class="filter-chip" onclick="setQueueFilter('in_progress',this)">Active</span>
+        </div>
+        <div class="section-header"><span class="section-title">Cases</span><span class="section-count" id="queue-count">0 cases</span></div>
+        <div id="queue-list"><div class="loading-center"><div class="spinner"></div><div class="loading-text">Loading cases...</div></div></div>
+      </div>
+    </div>
+    <!-- My Cases -->
+    <div class="section" id="section-my-cases">
+      <div class="page-header"><div class="page-title">My Cases</div><div class="page-sub">Cases you're actively working</div></div>
+      <div class="content"><div id="my-cases-list"><div class="loading-center"><div class="spinner"></div><div class="loading-text">Loading your cases...</div></div></div></div>
+    </div>
+    <!-- Completed -->
+    <div class="section" id="section-completed">
+      <div class="page-header"><div class="page-title">Completed</div><div class="page-sub">Filed and completed returns</div></div>
+      <div class="content"><div id="revenue-summary" style="display:none" class="revenue-banner"></div><div id="completed-list"><div class="loading-center"><div class="spinner"></div></div></div></div>
+    </div>
+    <!-- Catalog -->
+    <div class="section" id="section-catalog">
+      <div class="page-header"><div class="page-title">Service Catalog</div><div class="page-sub">All services and current pricing</div></div>
+      <div class="content"><div id="catalog-content"><div class="loading-center"><div class="spinner"></div></div></div></div>
+    </div>
+  </main>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mobile-bottom-nav">
+    <div class="bottom-nav-item active" onclick="showSection('queue')" id="bnav-queue">
+      <div class="bottom-nav-badge" id="bnav-queue-badge"><span class="bnav-icon">📋</span></div>
+      <span>Queue</span>
+    </div>
+    <div class="bottom-nav-item" onclick="showSection('my-cases')" id="bnav-my-cases">
+      <span class="bnav-icon">💼</span><span>Mine</span>
+    </div>
+    <div class="bottom-nav-item" onclick="showSection('completed')" id="bnav-completed">
+      <span class="bnav-icon">✅</span><span>Done</span>
+    </div>
+    <div class="bottom-nav-item" onclick="showSection('catalog')" id="bnav-catalog">
+      <span class="bnav-icon">📖</span><span>Services</span>
+    </div>
+  </nav>
+</div>
+
+<!-- CASE DETAIL MODAL -->
+<div class="modal-overlay" id="case-modal" onclick="if(event.target===this)closeModal()">
+  <div class="case-modal">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <div>
+        <div style="font-family:var(--serif);font-size:18px;margin-bottom:3px" id="modal-client-name">Client</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div style="font-size:11px;color:var(--muted2)" id="modal-client-email"></div>
+          <span id="modal-urgency-tag"></span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SB_URL  = 'https://rqozsbirrvrceqsknzgb.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJxb3pzYmlycnZyY2Vxc2tuemdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDAxMzgsImV4cCI6MjA4OTY3NjEzOH0.L16y0_bHiajs05ho9UPbz5bIdVwIijbeEqXBthGn4V4';
+// SECURITY: there used to be a PRO_KEY constant here -- a live secret that
+// granted full tax-pro-portal access to anyone who copied it from this
+// public page's source. It's gone for good. Every call below now relies
+// solely on the logged-in pro's real Supabase Auth session (the `token`
+// obtained in handleLogin), which tax-hub verifies server-side. `proEmail`
+// below is kept as a LOCAL-ONLY value (what the pro typed into their own
+// login form) purely for client-side filtering/display -- it is never sent
+// to the server as a claim of identity anymore.
+
+let token=null,user=null,proEmail=null,allCases=[],qFilter='all',qSearch='';
+
+// ── MOBILE NAV ───────────────────────────────────────────────────────────────
+function toggleMobileNav(){
+  document.getElementById('nav-overlay').classList.add('open');
+  document.getElementById('mobile-drawer').classList.add('open');
+}
+function closeMobileNav(){
+  document.getElementById('nav-overlay').classList.remove('open');
+  document.getElementById('mobile-drawer').classList.remove('open');
+}
+
+// ── AUTH ─────────────────────────────────────────────────────────────────────
+async function handleLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pw=document.getElementById('login-password').value;
+  const btn=document.getElementById('login-btn');
+  const err=document.getElementById('login-error');
+  if(!email||!pw){showErr('Please enter your email and password.');return;}
+  btn.textContent='Signing in…';btn.disabled=true;err.style.display='none';
+  try{
+    const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{
+      method:'POST',headers:{'Content-Type':'application/json',apikey:SB_ANON},
+      body:JSON.stringify({email,password:pw})
+    });
+    const d=await r.json();
+    if(!r.ok||!d.access_token){showErr(d.error_description||d.message||'Incorrect email or password.');btn.textContent='Sign In';btn.disabled=false;return;}
+    token=d.access_token;user=d.user;proEmail=email;
+    const q=await callHub({action:'pro_get_queue'});
+    if(!q.ok&&!q.queue){showErr('Access denied. Not registered as a tax professional.');btn.textContent='Sign In';btn.disabled=false;token=null;return;}
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').classList.add('open');
+    const displayName=q.pro_name||email.split('@')[0];
+    document.getElementById('pro-name-display').textContent=displayName;
+    document.getElementById('pro-email-display').textContent=email;
+    document.getElementById('m-pro-name').textContent=displayName;
+    document.getElementById('m-pro-email').textContent=email;
+    allCases=q.queue||[];
+    renderQueue();updateStats(q);loadProStats();
+  }catch(e){showErr('Network error. Check your connection.');btn.textContent='Sign In';btn.disabled=false;}
+}
+function showErr(m){const e=document.getElementById('login-error');e.textContent=m;e.style.display='block';}
+function handleSignOut(){
+  token=null;user=null;proEmail=null;allCases=[];
+  document.getElementById('app').classList.remove('open');
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-email').value='';
+  document.getElementById('login-password').value='';
+  document.getElementById('login-btn').textContent='Sign In';
+  document.getElementById('login-btn').disabled=false;
+  document.getElementById('login-error').style.display='none';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('login-screen').style.display!=='none')handleLogin();});
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function callHub(body){
+  try{
+    const h={'Content-Type':'application/json',apikey:SB_ANON};
+    if(token)h['Authorization']=`Bearer ${token}`;
+    const r=await fetch(`${SB_URL}/functions/v1/tax-hub`,{method:'POST',headers:h,body:JSON.stringify(body)});
+    if(!r.ok){const t=await r.text();console.error('tax-hub',r.status,t);return{error:`HTTP ${r.status}`};}
+    return r.json();
+  }catch(e){return{error:'network_error'};}
+}
+
+// ── NAV ───────────────────────────────────────────────────────────────────────
+function showSection(name){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(`section-${name}`).classList.add('active');
+  // Desktop sidebar
+  document.querySelectorAll('.sidebar .nav-item').forEach(n=>n.classList.remove('active'));
+  const dn=document.getElementById(`nav-${name}`);if(dn)dn.classList.add('active');
+  // Mobile drawer
+  document.querySelectorAll('.mobile-nav-drawer .nav-item').forEach(n=>n.classList.remove('active'));
+  const mn=document.getElementById(`mnav-${name}`);if(mn)mn.classList.add('active');
+  // Bottom nav
+  document.querySelectorAll('.bottom-nav-item').forEach(n=>n.classList.remove('active'));
+  const bn=document.getElementById(`bnav-${name}`);if(bn)bn.classList.add('active');
+  if(name==='my-cases')loadMyCases();
+  if(name==='completed')loadCompleted();
+  if(name==='catalog')loadCatalog();
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function updateStats(data){
+  const q=data.queue||[];
+  const pending=q.filter(c=>c.status==='pending').length;
+  document.getElementById('stat-new').textContent=pending;
+  const active=q.filter(c=>['assigned','in_progress','review'].includes(c.status)&&c.pro_email===proEmail).length;
+  document.getElementById('stat-active').textContent=active;
+  const badge=document.getElementById('queue-badge');
+  if(pending>0){badge.style.display='';badge.textContent=pending;}else badge.style.display='none';
+  // Mobile bottom badge
+  const mb=document.getElementById('bnav-queue-badge');
+  if(mb)mb.dataset.count=pending>0?pending:'';
+}
+async function loadProStats(){
+  const r=await callHub({action:'list_tax_pros'});
+  if(r.pros){const me=r.pros.find(p=>p.email===proEmail);if(me){document.getElementById('stat-filed').textContent=me.total_filed||0;document.getElementById('stat-rating').textContent=parseFloat(me.rating||5).toFixed(1);}}
+}
+
+// ── QUEUE ─────────────────────────────────────────────────────────────────────
+function setQueueFilter(f,el){
+  qFilter=f;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  if(el)el.classList.add('active');
+  renderQueue();
+}
+function filterQueue(){qSearch=document.getElementById('queue-search').value.toLowerCase();renderQueue();}
+function renderQueue(){
+  const el=document.getElementById('queue-list');
+  let cases=allCases.filter(c=>!['filed','completed'].includes(c.status));
+  if(qFilter!=='all')cases=cases.filter(c=>c.status===qFilter);
+  if(qSearch)cases=cases.filter(c=>(c.client?.name||'').toLowerCase().includes(qSearch)||(c.service_type||'').toLowerCase().includes(qSearch)||String(c.tax_year||'').includes(qSearch));
+  document.getElementById('queue-count').textContent=`${cases.length} case${cases.length!==1?'s':''}`;
+  if(cases.length===0){el.innerHTML=`<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No cases</div><div class="empty-sub">No cases match your filter.</div></div>`;return;}
+  el.innerHTML=cases.map(c=>renderCaseCard(c,c.status==='pending')).join('');
+}
+function renderCaseCard(c,showAccept=false){
+  const docs=(c.documents||[]).length;
+  const isUrgent=c.urgency==='urgent'||c.service_type?.includes('irs_notice');
+  const statusLabel={pending:'⏳ Pending',assigned:'👤 Assigned',in_progress:'📝 In Progress',review:'🔍 Review',filed:'✅ Filed',completed:'🎉 Complete'}[c.status]||c.status;
+  const svcLabel=(c.service_type||'').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
+  return `<div class="case-card${isUrgent?' urgent':''}" onclick="openCase('${c.id}')">
+    <div>
+      <div class="case-client">${esc(c.client?.name||'Unknown Client')}</div>
+      <div class="case-meta">
+        <span class="case-year">${c.tax_year}</span>
+        <span class="case-type-tag">${esc(svcLabel.slice(0,28))}</span>
+        ${docs>0?`<span style="color:var(--muted);font-size:11px">📎 ${docs}</span>`:''}
+        ${isUrgent?`<span class="urgent-badge">🔥 URGENT</span>`:''}
+      </div>
+    </div>
+    <div class="case-card-right" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+      <span class="status-pill pill-${c.status}">${statusLabel}</span>
+      ${showAccept&&c.status==='pending'?`<button class="accept-btn" onclick="event.stopPropagation();acceptCase('${c.id}')">Accept</button>`:''}
+    </div>
+  </div>`;
+}
+async function acceptCase(id){
+  const btn=document.querySelector(`[onclick*="acceptCase('${id}')"]`);
+  if(btn){btn.textContent='…';btn.disabled=true;}
+  const r=await callHub({action:'pro_accept_case',request_id:id});
+  if(r.ok){showToast('✅ Case accepted!','success');await refreshQueue();}
+  else{showToast('❌ Failed to accept.','error');if(btn){btn.textContent='Accept';btn.disabled=false;}}
+}
+async function refreshQueue(){
+  const r=await callHub({action:'pro_get_queue'});
+  if(r.queue){allCases=r.queue;renderQueue();updateStats(r);}
+}
+
+// ── MY CASES ──────────────────────────────────────────────────────────────────
+async function loadMyCases(){
+  const el=document.getElementById('my-cases-list');
+  el.innerHTML=`<div class="loading-center"><div class="spinner"></div></div>`;
+  const r=await callHub({action:'pro_get_queue'});
+  if(!r.queue){el.innerHTML='<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Failed to load</div></div>';return;}
+  allCases=r.queue;
+  const mine=r.queue.filter(c=>c.pro_email===proEmail&&!['filed','completed'].includes(c.status));
+  if(mine.length===0){el.innerHTML=`<div class="empty-state"><div class="empty-icon">💼</div><div class="empty-title">No active cases</div><div class="empty-sub">Accept cases from the queue to start working.</div></div>`;return;}
+  el.innerHTML=mine.map(c=>renderCaseCard(c,false)).join('');
+}
+
+// ── COMPLETED ─────────────────────────────────────────────────────────────────
+async function loadCompleted(){
+  const el=document.getElementById('completed-list');
+  el.innerHTML=`<div class="loading-center"><div class="spinner"></div></div>`;
+  const r=await callHub({action:'pro_get_queue'});
+  if(!r.queue){el.innerHTML='<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Failed to load</div></div>';return;}
+  allCases=r.queue;
+  const done=r.queue.filter(c=>['filed','completed'].includes(c.status));
+  const revEl=document.getElementById('revenue-summary');
+  if(done.length>0){
+    const thisYear=done.filter(c=>c.filed_at&&new Date(c.filed_at).getFullYear()===new Date().getFullYear()).length;
+    revEl.style.display='flex';
+    revEl.innerHTML=`<div class="revenue-item"><div class="revenue-val">${done.length}</div><div class="revenue-lbl">Total Filed</div></div><div style="width:1px;background:var(--border)"></div><div class="revenue-item"><div class="revenue-val">${thisYear}</div><div class="revenue-lbl">This Year</div></div>`;
+  }else revEl.style.display='none';
+  if(done.length===0){el.innerHTML=`<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-title">No completed cases yet</div></div>`;return;}
+  el.innerHTML=done.map(c=>renderCaseCard(c,false)).join('');
+}
+
+// ── CATALOG ───────────────────────────────────────────────────────────────────
+async function loadCatalog(){
+  const el=document.getElementById('catalog-content');
+  const catalog=[
+    {cat:'tax_filing',title:'Simple Tax Return',price:'$149',note:'W-2, standard deductions'},
+    {cat:'tax_filing',title:'Self-Employed / 1099',price:'$249',note:'Schedule C, freelancers'},
+    {cat:'tax_filing',title:'Small Business Return',price:'$499',note:'S-Corp, LLC, partnerships'},
+    {cat:'tax_filing',title:'Amended Return (1040-X)',price:'$199',note:'Fix prior year filing'},
+    {cat:'tax_filing',title:'Unfiled Returns',price:'From $149/yr',note:'Behind on filing'},
+    {cat:'tax_filing',title:'Tax Extension Filing',price:'$49',note:'6-month extension'},
+    {cat:'tax_planning',title:'30-Min Consultation',price:'$75',note:'Quick CPA answers'},
+    {cat:'tax_planning',title:'Annual Tax Strategy',price:'$149',note:'90-min deep dive'},
+    {cat:'tax_planning',title:'Quarterly Tax Planning',price:'$399/yr',note:'4 sessions/year'},
+    {cat:'tax_planning',title:'Multi-Year Tax Projection',price:'$199',note:'1, 3, 5-year forecast'},
+    {cat:'tax_planning',title:'Real Estate Tax Analysis',price:'$199',note:'Rental, 1031 exchanges'},
+    {cat:'debt_relief',title:'IRS Notice Review',price:'$149',note:'48-hour turnaround'},
+    {cat:'debt_relief',title:'Tax Debt Relief',price:'Custom',note:'Offer in Compromise'},
+    {cat:'debt_relief',title:'Currently Not Collectible',price:'$199',note:'Pause IRS collections'},
+    {cat:'debt_relief',title:'Penalty Abatement',price:'From $149',note:'Reduce IRS penalties'},
+    {cat:'debt_relief',title:'IRS Audit Defense',price:'Custom',note:'Full representation'},
+    {cat:'debt_relief',title:'IRS Payment Plan Setup',price:'$199',note:'Installment agreement'},
+    {cat:'recovery',title:'Personal Debt Review',price:'$99',note:'60-min counseling'},
+    {cat:'recovery',title:'Financial Recovery Plan',price:'$249',note:'90-day program'},
+    {cat:'business',title:'Business Formation',price:'$299',note:'LLC or S-Corp setup'},
+    {cat:'business',title:'Business Restructuring',price:'$349',note:'Optimize for tax savings'},
+    {cat:'business',title:'Monthly Bookkeeping',price:'From $150/mo',note:'Clean books'},
+    {cat:'business',title:'Payroll Management',price:'Custom',note:'End-to-end payroll'},
+    {cat:'business',title:'Fractional CFO',price:'Custom',note:'Executive finance'},
+    {cat:'wealth',title:'Estate & Retirement Planning',price:'$199',note:'60-min session'},
+    {cat:'wealth',title:'Investment Tax Review',price:'$149',note:'Portfolio optimization'},
+    {cat:'wealth',title:'Retirement Contribution Strategy',price:'$99',note:'Solo 401k, SEP-IRA'},
+  ];
+  const catLabels={tax_filing:'Tax Filing',tax_planning:'Tax Planning',debt_relief:'IRS & Debt Relief',recovery:'Personal Debt',business:'Business Services',wealth:'Wealth & Retirement'};
+  const groups={};
+  catalog.forEach(s=>{if(!groups[s.cat])groups[s.cat]=[];groups[s.cat].push(s);});
+  let html='';
+  Object.entries(groups).forEach(([cat,items])=>{
+    html+=`<div class="divider-label">${catLabels[cat]||cat}</div><div class="catalog-grid">`;
+    items.forEach(s=>{html+=`<div class="catalog-card ${s.cat}"><div class="catalog-title">${esc(s.title)}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px"><div class="catalog-price">${esc(s.price)}</div><div class="catalog-cat">${esc(s.note)}</div></div></div>`;});
+    html+='</div>';
+  });
+  html+=`<div class="legal-footer"><strong>IRS Circular 230:</strong> Tax advice is not intended to avoid penalties under the Internal Revenue Code.<br><strong>Pricing:</strong> Prices are estimates. Final pricing confirmed by CPA before work begins. Platform fee: 20%.<br><strong>Refunds:</strong> Consultations non-refundable after session. Filing services non-refundable once work begins.</div>`;
+  el.innerHTML=html;
+}
+
+// ── CASE DETAIL ───────────────────────────────────────────────────────────────
+async function openCase(id){
+  let c=allCases.find(x=>x.id===id);
+  if(!c){await refreshQueue();c=allCases.find(x=>x.id===id);}
+  if(!c)return;
+  document.getElementById('modal-client-name').textContent=c.client?.name||'Unknown Client';
+  document.getElementById('modal-client-email').textContent=c.client?.email||'';
+  document.getElementById('modal-urgency-tag').innerHTML=c.urgency==='urgent'?'<span class="urgent-badge">🔥 URGENT</span>':'';
+  const body=document.getElementById('modal-body');
+  const docs=c.documents||[];
+  const income=c.income_entries||[];
+  const intake=c.intake_answers||{};
+  const msgRes=await callHub({action:'pro_get_messages',request_id:id});
+  const messages=msgRes.messages||[];
+  const svcLabel=(c.service_type||'').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
+  const statusOpts=buildStatusOptions(c.status);
+  body.innerHTML=`
+    <div class="info-grid">
+      <div class="info-item"><label>Service</label><value>${esc(svcLabel)}</value></div>
+      <div class="info-item"><label>Tax Year</label><value>${c.tax_year}</value></div>
+      <div class="info-item"><label>Status</label><value><span class="status-pill pill-${c.status}">${c.status}</span></value></div>
+      <div class="info-item"><label>Submitted</label><value>${fmtDate(c.created_at)}</value></div>
+      <div class="info-item"><label>Urgency</label><value style="color:${c.urgency==='urgent'?'var(--red)':'var(--muted2)'}">${c.urgency==='urgent'?'🔥 Urgent':'Normal'}</value></div>
+      ${c.notes?`<div class="info-item" style="grid-column:1/-1"><label>Client Notes</label><value style="color:var(--muted2);font-size:12px;line-height:1.6">${esc(c.notes)}</value></div>`:''}
+    </div>
+    ${Object.keys(intake).length>0?`<div class="divider-label">Client Intake</div><div class="intake-block">${Object.entries(intake).map(([k,v])=>`<div style="margin-bottom:10px"><div class="intake-q">${esc(k.replace(/_/g,' '))}</div><div class="intake-a">${esc(v)}</div></div>`).join('')}</div>`:''}
+    ${docs.length>0?`<div class="divider-label">Documents (${docs.length})</div>${docs.map(d=>`<div class="doc-item"><span style="font-size:16px">📄</span><span class="doc-name">${esc(d.file_name||d.doc_type)}</span><span class="doc-type">${(d.doc_type||'').toUpperCase()}</span></div>`).join('')}`:''}
+    ${!['filed','completed'].includes(c.status)?`
+    <div class="divider-label">Update Case</div>
+    <div class="update-form">
+      <div class="form-row">
+        <div class="form-group"><label>New Status</label><select id="modal-status"><option value="">Select...</option>${statusOpts}</select></div>
+        <div class="form-group"><label>Est. Refund ($)</label><input type="number" id="modal-refund" placeholder="e.g. 2400" value="${c.estimated_refund||''}"></div>
+      </div>
+      <div class="form-group"><label>Note for Client</label><textarea id="modal-notes" placeholder="Visible in the app…">${esc(c.pro_notes||'')}</textarea></div>
+      <button class="update-btn" onclick="updateCase('${id}')">Update</button>
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+    </div>`:''}
+    <div class="divider-label">Messages</div>
+    <div id="message-thread" class="message-thread">
+      ${messages.length===0?'<div style="text-align:center;padding:16px;font-size:12px;color:var(--muted2)">No messages yet.</div>':
+        messages.map(m=>`<div class="message ${m.sender_role==='pro'?'from-pro':'from-client'}"><div class="message-bubble">${esc(m.message)}</div><div class="message-meta">${m.sender_role==='pro'?'You':'Client'} · ${fmtDate(m.created_at)}</div></div>`).join('')}
+    </div>
+    <div class="msg-input-row">
+      <input class="msg-input" id="msg-input" placeholder="Message to client…" onkeydown="if(event.key==='Enter')sendMsg('${id}')">
+      <button class="msg-send" onclick="sendMsg('${id}')">Send</button>
+    </div>`;
+  document.getElementById('case-modal').classList.add('open');
+  const thread=document.getElementById('message-thread');
+  if(thread)thread.scrollTop=thread.scrollHeight;
+}
+function buildStatusOptions(cur){
+  const flow={pending:['assigned'],assigned:['in_progress','review'],in_progress:['review','filed'],review:['filed'],filed:['completed']};
+  const labels={assigned:'👤 Assign to Myself',in_progress:'📝 In Progress',review:'🔍 Under Review',filed:'✅ Filed',completed:'🎉 Completed'};
+  return(flow[cur]||[]).map(s=>`<option value="${s}">${labels[s]||s}</option>`).join('');
+}
+function closeModal(){document.getElementById('case-modal').classList.remove('open');}
+async function updateCase(id){
+  const status=document.getElementById('modal-status')?.value;
+  const notes=document.getElementById('modal-notes')?.value;
+  const refund=document.getElementById('modal-refund')?.value;
+  if(!status){showToast('Select a status first.','error');return;}
+  const body={action:'pro_update_status',request_id:id,status};
+  if(notes)body.pro_notes=notes;
+  if(refund)body.estimated_refund=parseFloat(refund);
+  if(status==='filed')body.filed_at=new Date().toISOString();
+  const r=await callHub(body);
+  if(r.ok){showToast(`✅ Updated to "${status}"`, 'success');closeModal();await refreshQueue();}
+  else showToast('❌ Update failed.','error');
+}
+async function sendMsg(id){
+  const input=document.getElementById('msg-input');
+  const msg=input?.value?.trim();if(!msg)return;
+  input.value='';
+  const r=await callHub({action:'pro_send_message',request_id:id,message:msg});
+  if(r.ok){
+    const thread=document.getElementById('message-thread');
+    if(thread){const el=document.createElement('div');el.className='message from-pro';el.innerHTML=`<div class="message-bubble">${esc(msg)}</div><div class="message-meta">You · Just now</div>`;thread.appendChild(el);thread.scrollTop=thread.scrollHeight;}
+    showToast('Sent','success');
+  }else{showToast('Failed to send','error');input.value=msg;}
+}
+
+// ── CHANGE PASSWORD ───────────────────────────────────────────────────────────
+function showChangePassword(){
+  const o=document.createElement('div');o.id='pw-overlay';
+  o.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px';
+  o.innerHTML=`<div style="background:#131519;border:1px solid rgba(238,241,239,0.15);border-radius:20px;padding:28px;width:100%;max-width:380px">
+    <div style="font-family:var(--serif);font-size:20px;margin-bottom:18px;color:var(--text)">Change Password</div>
+    <div id="pw-err" style="display:none;background:rgba(255,61,85,0.1);border:1px solid rgba(255,61,85,0.25);border-radius:8px;padding:10px;font-size:12px;color:var(--red);margin-bottom:14px"></div>
+    <div style="margin-bottom:12px"><label style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">New Password</label><input id="new-pw" type="password" placeholder="Min 10 chars, uppercase, number, symbol" style="width:100%;background:#161b24;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:11px 12px;font-size:14px;color:#eef1f8;outline:none;font-family:var(--sans);-webkit-appearance:none"></div>
+    <div style="margin-bottom:20px"><label style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">Confirm Password</label><input id="confirm-pw" type="password" placeholder="Repeat new password" style="width:100%;background:#161b24;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:11px 12px;font-size:14px;color:#eef1f8;outline:none;font-family:var(--sans);-webkit-appearance:none"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="document.getElementById('pw-overlay').remove()" style="flex:1;background:transparent;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:11px;font-size:13px;color:var(--muted2);cursor:pointer;font-family:var(--sans)">Cancel</button>
+      <button onclick="doChangePw()" style="flex:2;background:#2aff94;color:#08090c;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans)">Update</button>
+    </div>
+  </div>`;
+  document.body.appendChild(o);
+}
+async function doChangePw(){
+  const pw=document.getElementById('new-pw').value;
+  const conf=document.getElementById('confirm-pw').value;
+  const err=document.getElementById('pw-err');
+  const show=m=>{err.textContent=m;err.style.display='block';};
+  if(pw.length<10)return show('Minimum 10 characters');
+  if(pw!==conf)return show('Passwords do not match');
+  if(!/[A-Z]/.test(pw)||!/[0-9]/.test(pw))return show('Need uppercase and number');
+  if(!/[!@#$%^&*]/.test(pw))return show('Need a special character (!@#$%^&*)');
+  try{
+    const r=await fetch(`${SB_URL}/auth/v1/user`,{method:'PUT',headers:{'Content-Type':'application/json',apikey:SB_ANON,Authorization:`Bearer ${token}`},body:JSON.stringify({password:pw})});
+    if(r.ok){document.getElementById('pw-overlay').remove();showToast('✅ Password updated','success');}
+    else{const d=await r.json();show(d.message||'Failed to update');}
+  }catch{show('Network error');}
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtDate(iso){if(!iso)return'-';return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+let _tt;
+function showToast(msg,type='success'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className=`show ${type}`;
+  clearTimeout(_tt);_tt=setTimeout(()=>el.className='',3500);
+}
+setInterval(()=>{if(token&&proEmail)refreshQueue();},90000);
+</script>
+</body>
+</html>
