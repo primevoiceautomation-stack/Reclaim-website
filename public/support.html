@@ -3,75 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Talby Support</title>
+<title>Support | Talby</title>
+<meta name="description" content="Get help with Talby, or contact our team directly.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://gettalbyapp.store/support">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/talby-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0b0d;--surface:#131519;--ink:#eef1ef;--muted:#7d8590;--faint:#4c525c;--accent:#2aff94;--gold:#c9a961;--gold-dim:rgba(201,169,97,0.22);--line:rgba(238,241,239,0.09)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);padding:80px 24px;max-width:740px;margin:0 auto;line-height:1.8}
-h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:36px;color:var(--ink);margin-bottom:8px}
-h2{font-size:16px;font-weight:600;margin:44px 0 4px;color:var(--ink);padding-bottom:8px;border-bottom:1px solid var(--line)}
-p,li{font-size:14px;color:var(--muted);margin-bottom:10px;line-height:1.75}
-ul{padding-left:20px;margin-bottom:16px}
+:root{
+  --bg:#0a0b0d;--surface:#131519;--surface2:#0e1013;
+  --ink:#eef1ef;--muted:#7d8590;--faint:#4c525c;
+  --accent:#2aff94;--gold:#c9a961;--gold-dim:rgba(201,169,97,0.22);
+  --line:rgba(238,241,239,0.09);
+  --serif:'Fraunces',Georgia,serif;--sans:'Work Sans',system-ui,-apple-system,sans-serif;--mono:'Space Mono',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
-strong{color:var(--ink)}
-.contact-row{padding:20px 0;border-bottom:1px solid var(--line);display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.contact-row:first-of-type{border-top:1px solid var(--line)}
-.contact-title{font-size:14.5px;font-weight:600;color:var(--ink)}
-.contact-desc{font-size:13px;color:var(--muted);margin-top:3px}
-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:60px}
-.nav-logo{font-family:'Fraunces',Georgia,serif;font-size:19px;color:var(--ink);text-decoration:none}
-.nav-back{font-size:13px;color:var(--muted);text-decoration:none}
-.nav-back:hover{color:var(--accent)}
-.qa{padding:16px 0;border-bottom:1px solid var(--line)}
-.qa:first-of-type{border-top:1px solid var(--line)}
-footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--line);font-size:12px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:68px;background:rgba(10,11,13,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--serif);font-weight:600;font-size:19px}
+.nav-logo:hover{text-decoration:none}
+.nav-logo img{width:28px;height:28px;border-radius:6px}
+.nav-back{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500}
+.wrap{max-width:720px;margin:0 auto;padding:72px 24px 100px}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(32px,4vw,44px);margin-bottom:14px;letter-spacing:-0.01em}
+.lede{color:var(--muted);font-size:16px;margin-bottom:48px;max-width:520px;line-height:1.7}
+h2{font-family:var(--serif);font-weight:500;font-size:22px;margin:0 0 20px;letter-spacing:-0.005em}
+.contact-box{background:var(--surface);border:1px solid var(--line);padding:30px;margin-bottom:56px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.contact-box p{color:var(--muted);font-size:14.5px;max-width:360px}
+.contact-box a.email{font-family:var(--mono);font-size:15px;color:var(--accent);border:1px solid var(--line);padding:12px 20px;white-space:nowrap}
+.contact-box a.email:hover{border-color:var(--accent);text-decoration:none}
+.faq-list{margin-bottom:56px}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-item:first-child{border-top:1px solid var(--line)}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:20px 0;font-size:15px;font-weight:500;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:var(--sans)}
+.faq-mark{font-family:var(--mono);color:var(--muted);flex-shrink:0}
+.faq-item.open .faq-mark{color:var(--accent)}
+.faq-a{font-size:14px;color:var(--muted);line-height:1.7;padding-bottom:20px;display:none}
+.faq-item.open .faq-a{display:block}
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:56px}
+.status-card{background:var(--surface);border:1px solid var(--line);padding:22px}
+.status-card h3{font-size:14px;font-weight:600;margin-bottom:6px}
+.status-card p{font-size:13.5px;color:var(--muted);line-height:1.6}
+footer{padding:48px 24px;border-top:1px solid var(--line);text-align:center;font-size:12.5px;color:var(--faint)}
+footer a{color:var(--faint)}
+@media(max-width:560px){.status-grid{grid-template-columns:1fr}.contact-box{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 <nav>
-  <a class="nav-logo" href="/">Talby</a>
-  <a class="nav-back" href="/">← Back to home</a>
+  <a href="/" class="nav-logo"><img src="/talby-icon.png" alt="Talby logo">Talby</a>
+  <a href="/" class="nav-back">&larr; Back to home</a>
 </nav>
+<div class="wrap">
+  <h1>Support</h1>
+  <p class="lede">Talby is still in development, so this page covers the most common questions we're already getting. Can't find what you need? Email us directly.</p>
 
-<h1>Support</h1>
-<p style="color:var(--faint);font-size:13px">We typically respond within 5 business days.</p>
+  <div class="contact-box">
+    <p>We read every email ourselves and usually reply within a day or two.</p>
+    <a href="mailto:support@gettalbyapp.store" class="email">support@gettalbyapp.store</a>
+  </div>
 
-<h2>Contact us</h2>
-<div class="contact-row">
-  <div><div class="contact-title">General support</div><div class="contact-desc">App issues, account questions, and general help.</div></div>
-  <a href="mailto:support@gettalbyapp.store">support@gettalbyapp.store</a>
+  <h2>Frequently asked</h2>
+  <div class="faq-list">
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is Talby available yet?<span class="faq-mark">+</span></button><div class="faq-a">Not yet. We're in final development and working through the App Store setup now. Join the waitlist on the homepage and we'll email you the moment it's live.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">I joined the waitlist but haven't gotten an email. Did it work?<span class="faq-mark">+</span></button><div class="faq-a">If you saw the confirmation message after submitting, you're on the list. We only send an email when there's something worth telling you, most likely when we're close to launch, so a quiet inbox doesn't mean anything went wrong. If you're unsure, email us and we'll check.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Which countries will Talby support at launch?<span class="faq-mark">+</span></button><div class="faq-a">We're building for the US, UK, EU, and Canada first, with broader support planned after. Bank connections use Plaid in the US and Canada, and TrueLayer in the UK and EU.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Will Talby be available on Android?<span class="faq-mark">+</span></button><div class="faq-a">iOS first. We don't have a confirmed Android timeline yet, but it's something we're considering once the iOS app is stable.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How do I report a bug or suggest a feature?<span class="faq-mark">+</span></button><div class="faq-a">Email us at support@gettalbyapp.store with as much detail as you can, what happened, what you expected, and a screenshot if it's visual. Every message gets read.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is my data safe if I'm not even using the app yet?<span class="faq-mark">+</span></button><div class="faq-a">If you've only joined the waitlist, we just have your email, nothing financial. See our <a href="/privacy">Privacy Policy</a> for the full details on how data is handled once the app is live.</div></div>
+  </div>
+
+  <h2>Quick links</h2>
+  <div class="status-grid">
+    <div class="status-card"><h3>Privacy Policy</h3><p>How we handle your data, before and after launch. <a href="/privacy">Read it &rarr;</a></p></div>
+    <div class="status-card"><h3>Terms of Service</h3><p>The terms that will govern using the app. <a href="/terms">Read them &rarr;</a></p></div>
+  </div>
 </div>
-<div class="contact-row">
-  <div><div class="contact-title">Privacy and data requests</div><div class="contact-desc">GDPR requests, data deletion, and privacy questions.</div></div>
-  <a href="mailto:privacy@gettalbyapp.store">privacy@gettalbyapp.store</a>
-</div>
-<div class="contact-row">
-  <div><div class="contact-title">Tax and CPA services</div><div class="contact-desc">Tax filing, scheduling, and professional services.</div></div>
-  <a href="mailto:tax@gettalbyapp.store">tax@gettalbyapp.store</a>
-</div>
-
-<h2>Common questions</h2>
-<div class="qa"><p><strong>How do I cancel my subscription?</strong></p><p>Open iPhone Settings → Apple ID → Subscriptions → Talby → Cancel. Cancellation takes effect at the end of your billing period.</p></div>
-<div class="qa"><p><strong>How do I delete my account?</strong></p><p>Open Talby → Settings → Delete Account. All your data is permanently deleted immediately.</p></div>
-<div class="qa"><p><strong>Is my bank login stored?</strong></p><p>No. Bank connections use read-only OAuth through Plaid or TrueLayer. We never see or store your login credentials.</p></div>
-<div class="qa"><p><strong>What if a merchant doesn't respond?</strong></p><p>Talby automatically sends follow-up emails on your behalf if you're on a Recover plan or higher. On the free plan, you can manually send follow-ups.</p></div>
-<div class="qa"><p><strong>Which countries are supported?</strong></p><p>US, Canada, UK, Germany, France, Netherlands, Sweden, Norway, Switzerland, Ireland, Austria, UAE, Saudi Arabia, Qatar, Singapore, Japan, Hong Kong, New Zealand, South Korea, Australia, and Brazil.</p></div>
-<div class="qa"><p><strong>How do I request a refund?</strong></p><p>Subscription refunds are handled by Apple at <a href="https://reportaproblem.apple.com">reportaproblem.apple.com</a>. For tax professional service refunds, contact <a href="mailto:support@gettalbyapp.store">support@gettalbyapp.store</a> before work has commenced.</p></div>
-<div class="qa"><p><strong>How do I export my data?</strong></p><p>Open Talby → Settings → Export My Data. You'll receive a JSON file with all your data within seconds.</p></div>
-
-<h2>Legal</h2>
-<ul>
-  <li><a href="/privacy">Privacy Policy</a></li>
-  <li><a href="/terms">Terms of Service</a></li>
-</ul>
-
-<footer>
-  <span>&copy; 2026 Talby. All rights reserved.</span>
-  <span>support@gettalbyapp.store</span>
-</footer>
+<footer>&copy; 2026 Talby &middot; <a href="/">Home</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></footer>
+<script>function toggleFaq(btn){btn.parentElement.classList.toggle('open')}</script>
 </body>
 </html>
