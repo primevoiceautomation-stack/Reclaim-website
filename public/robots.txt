@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.gettalbyapp.store/sitemap.xml
+
+Sitemap: https://gettalbyapp.store/sitemap.xml
