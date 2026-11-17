@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /tax-pro-portal
 
-Sitemap: https://gettalbyapp.store/sitemap.xml
+Sitemap: https://www.gettalbyapp.store/sitemap.xml
